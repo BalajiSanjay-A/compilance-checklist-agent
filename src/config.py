@@ -85,6 +85,18 @@ class Settings(BaseSettings):
         default=60,
         description="Access token lifespan in minutes.",
     )
+    default_admin_username: str = Field(
+        default="compliance_admin",
+        description="Initial seeded compliance officer username.",
+    )
+    default_admin_email: str = Field(
+        default="admin@compliance.local",
+        description="Initial seeded compliance officer email.",
+    )
+    default_admin_password: str = Field(
+        default="change_this_password_immediately",
+        description="Initial seeded compliance officer password.",
+    )
 
     # Background worker settings
     worker_poll_interval_seconds: int = Field(

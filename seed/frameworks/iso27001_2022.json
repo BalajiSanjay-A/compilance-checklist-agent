@@ -1,0 +1,55 @@
+{
+  "name": "ISO/IEC 27001",
+  "version": "2022",
+  "description": "International Organization for Standardization Information Security Management System (ISMS) - Annex A Controls.",
+  "requirements": [
+    {
+      "requirement_code": "A.5.1",
+      "title": "Policies for Information Security",
+      "description": "Information security policy and topic-specific policies shall be defined, approved by management, published, communicated to and acknowledged by relevant personnel and relevant interested parties, and reviewed at planned intervals.",
+      "severity": "HIGH"
+    },
+    {
+      "requirement_code": "A.5.15",
+      "title": "Access Control",
+      "description": "Rules to control physical and logical access to information and other associated assets shall be established and documented based on business and information security requirements.",
+      "severity": "CRITICAL"
+    },
+    {
+      "requirement_code": "A.5.24",
+      "title": "Information Security Incident Management Planning",
+      "description": "The organization shall plan and prepare for managing information security incidents by defining, establishing and communicating information security incident management processes, roles and responsibilities.",
+      "severity": "HIGH"
+    },
+    {
+      "requirement_code": "A.8.1",
+      "title": "User Endpoint Devices",
+      "description": "Information stored on, processed by or accessible via user endpoint devices shall be protected using endpoint management, encryption, and patch controls.",
+      "severity": "MEDIUM"
+    },
+    {
+      "requirement_code": "A.8.2",
+      "title": "Privileged Access Rights",
+      "description": "The allocation and use of privileged access rights shall be restricted and managed via multi-factor authentication and recurring review.",
+      "severity": "CRITICAL"
+    },
+    {
+      "requirement_code": "A.8.5",
+      "title": "Secure Authentication",
+      "description": "Secure authentication technologies and procedures shall be established based on information access restrictions and the topic-specific policy on access control.",
+      "severity": "HIGH"
+    },
+    {
+      "requirement_code": "A.8.20",
+      "title": "Network Security",
+      "description": "Networks and network devices shall be secured, managed and controlled to protect information in systems and applications.",
+      "severity": "HIGH"
+    },
+    {
+      "requirement_code": "A.8.24",
+      "title": "Use of Cryptography",
+      "description": "Rules for the effective use of cryptography, including cryptographic key management, shall be defined and implemented.",
+      "severity": "HIGH"
+    }
+  ]
+}

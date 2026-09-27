@@ -1,11 +1,17 @@
 """Pytest configuration and shared test fixtures."""
 
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Generator
 import pytest
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy import create_engine, event
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from src.config import Settings, get_settings
 from src.core.security import Role, create_access_token
+from src.database.base import Base
+import src.database.models  # noqa: F401
 from src.main import create_application
 
 
@@ -23,10 +29,44 @@ def test_settings() -> Settings:
     )
 
 
+@pytest.fixture(scope="session")
+def db_engine() -> Generator[Engine, None, None]:
+    """In-memory SQLite engine with StaticPool and foreign key enforcement."""
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    @event.listens_for(engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
+    Base.metadata.create_all(bind=engine)
+    yield engine
+    Base.metadata.drop_all(bind=engine)
+    engine.dispose()
+
+
+@pytest.fixture
+def db_session(db_engine: Engine) -> Generator[Session, None, None]:
+    """Database session providing clean table isolation per test function."""
+    connection = db_engine.connect()
+    transaction = connection.begin()
+    session = Session(bind=connection, expire_on_commit=False)
+
+    yield session
+
+    session.close()
+    transaction.rollback()
+    connection.close()
+
+
 @pytest.fixture
 def override_settings(test_settings: Settings):
     """Override application get_settings dependency with test_settings."""
-    from src.config import get_settings
     get_settings.cache_clear()
     return test_settings
 

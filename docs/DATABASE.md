@@ -29,9 +29,25 @@ USERS (1) ───< EVIDENCE_DOCUMENTS (uploaded_by)
    - `evidence_documents.validity_status`: Enum (`VALID`, `EXPIRING_SOON`, `EXPIRED`).
 2. **Immutable AI Audit Ledger**:
    - `evidence_matches` records every evaluation event immutably.
-   - Includes `model_name`, `prompt_version`, `citation_verified`, `supporting_evidence` (JSONB array), and `confidence` (recorded strictly as metadata).
+   - Includes `model_name`, `prompt_version`, `citation_verified`, `supporting_evidence` (JSON array), and `confidence` (recorded strictly as metadata).
 3. **Current State vs Historical Ledger**:
    - `compliance_status` holds the authoritative snapshot for each requirement (`UNIQUE(requirement_id)`).
    - `compliance_status_history` logs all state transitions with timestamps and reasons.
 4. **Durable Job Queue**:
-   - `document_processing_jobs` manages durable background execution with lease locking, retry counters, and failure logging.
+   - `document_processing_jobs` manages durable background execution with lease locking (`locked_at`, `locked_by`), retry counters (`attempts`, `max_attempts`), and failure logging.
+5. **Foreign Key Integrity**:
+   - Deleting a framework is restricted if requirements exist.
+   - Deleting an evidence document cascades to jobs, but restricts deletion if active matches exist.
+   - Deleting a requirement cascades to its current compliance status and history.
+
+## 4. Migrations & Versioning
+- Tool: **Alembic** (`alembic/`)
+- Initial Revision: `0c0c5ce46f4c_0001_initial_schema.py`
+- Commands:
+  - Upgrade: `alembic upgrade head`
+  - Downgrade: `alembic downgrade base`
+
+## 5. Seeded Compliance Frameworks
+- **SOC 2 Type II** (`seed/frameworks/soc2_type2.json`): 9 core criteria (CC6.1, CC6.2, CC6.3, CC6.6, CC6.7, CC6.8, CC7.1, CC7.2, CC8.1).
+- **ISO/IEC 27001:2022** (`seed/frameworks/iso27001_2022.json`): 8 core controls (A.5.1, A.5.15, A.5.24, A.8.1, A.8.2, A.8.5, A.8.20, A.8.24).
+- Seeder execution: `python -m src.database.seed` (fully idempotent).

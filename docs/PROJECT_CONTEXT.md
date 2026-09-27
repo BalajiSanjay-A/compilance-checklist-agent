@@ -4,9 +4,9 @@
 The **Compliance Checklist Automation Agent** is a production-oriented, AI-assisted regulatory compliance platform designed to track recurring checklist items across frameworks (e.g., SOC 2 Type II, ISO/IEC 27001:2022). It handles evidence document ingestion, secure text extraction, asynchronous evidence matching against compliance requirements using Grok (xAI API), deterministic compliance state calculation, evidence expiration management, and actionable gap reporting.
 
 ## 2. Current Architecture & Implementation State
-- **Current Milestone**: Module 0 - Project Foundation & Context Engineering
+- **Current Milestone**: Module 1 - Database Foundation (Completed)
 - **Active Branch**: `temporary` (all development occurs here; merges to `main` at module completion gates)
-- **Status**: Scaffolding project foundation, dependency management, Pydantic settings, structured logging, auth boundary stubs, and engineering documentation memory layer.
+- **Status**: Database models, SQLAlchemy 2.0 DeclarativeBase, Alembic migrations (`0001_initial_schema`), PostgreSQL-first schema, SQLite compatibility, seed frameworks (SOC 2 Type II and ISO/IEC 27001:2022), and default user seeding completed and verified. Ready for Module 2.
 
 ## 3. Technology Stack
 - **Language & Runtime**: Python 3.12+
@@ -30,18 +30,28 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
    - The LLM cannot mutate database state or approve without evidence.
 4. **Early Authentication & Authorization Boundaries**:
    - `Role` constants (`compliance-officer`, `admin`, `auditor`) and `require_role(...)` dependency boundaries established in Module 0.
+5. **Database Source of Truth & Normalization**:
+   - Many-to-many relationship: One evidence document can match multiple requirements; one requirement can evaluate multiple evidence documents over time.
+   - `evidence_matches` is an immutable append-only evaluation ledger.
+   - `compliance_status` represents the current state snapshot per requirement (`UNIQUE(requirement_id)`).
+   - `compliance_status_history` logs state transitions.
 
 ## 5. Important Files & Locations
 - `src/config.py`: Centralized environment configuration via Pydantic Settings.
+- `src/database/base.py`: SQLAlchemy 2.0 DeclarativeBase, UUIDPrimaryKeyMixin, TimestampMixin.
+- `src/database/session.py`: Engine, sessionmaker, transactional_session, and SQLite PRAGMA configuration.
+- `src/database/models/`: Entity definitions (`framework.py`, `evidence.py`, `match.py`, `compliance.py`, `gap_report.py`, `user.py`, `enums.py`).
+- `src/database/seed.py`: Idempotent seeder for compliance frameworks, requirements, and default admin user.
+- `seed/frameworks/`: Built-in seed frameworks (`soc2_type2.json`, `iso27001_2022.json`).
+- `alembic/versions/0c0c5ce46f4c_0001_initial_schema.py`: Initial migration for all tables.
 - `src/core/logging.py`: Structured JSON logging with credential and secret scrubbing.
 - `src/core/security.py`: Auth boundaries, role definitions, and dependency guards.
-- `src/core/exceptions.py`: Standard domain exception hierarchy.
-- `src/main.py`: FastAPI application entrypoint and health checks.
+- `src/main.py`: FastAPI application entrypoint.
 - `docs/`: Canonical engineering context documents.
 
 ## 6. Milestone Progress
 - [x] **Module 0**: Project Foundation, Settings, Logging, Auth Boundaries, Context System, Test Harness *(Completed)*
-- [ ] **Module 1**: Database Foundation & Schemas
+- [x] **Module 1**: Database Foundation & Schemas, Alembic Migrations, Seed Data *(Completed)*
 - [ ] **Module 2**: Framework & Requirement Management APIs
 - [ ] **Module 3**: Evidence Ingestion & Secure Storage
 - [ ] **Module 4**: Durable DB-Backed Job Queue
