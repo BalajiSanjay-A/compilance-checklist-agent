@@ -1,14 +1,56 @@
+# Virtual Environment
 .venv/
 venv/
+ENV/
+env/
+
+# Python cache and bytecode
 __pycache__/
 *.py[cod]
-.pytest_cache/
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Environment and secrets
 .env
 .env.*
+!.env.example
 
+# Databases
 *.db
 *.sqlite
 *.sqlite3
 
+# Local storage and evidence files
+storage/evidence/*
+!storage/evidence/.gitkeep
+
+# IDE and OS artifacts
 .DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
