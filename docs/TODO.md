@@ -93,6 +93,12 @@
   - [x] Dev header bypass preserved for test/dev mode.
   - [x] Unit tests (24) and API integration tests (25).
 
-## Next (Module 9)
-- [ ] Aggregated compliance dashboard API (Module 9).
+- [x] **Module 9: Aggregated Compliance Status Dashboard**
+  - [x] `DashboardService` with system overview, all-frameworks summary, framework detail, gap summary, evidence summary.
+  - [x] Pydantic schemas for all dashboard responses.
+  - [x] REST endpoints: `GET /dashboard/overview`, `GET /dashboard/frameworks`, `GET /dashboard/frameworks/{id}`, `GET /dashboard/gaps`, `GET /dashboard/evidence`.
+  - [x] All endpoints require auditor role.
+  - [x] Unit tests (13) and API integration tests (12).
+
+## Next (Module 10)
 - [ ] Hardening, security testing, and end-to-end demo (Module 10).

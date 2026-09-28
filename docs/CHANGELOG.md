@@ -5,6 +5,14 @@ This changelog serves as the persistent engineering memory layer alongside git c
 
 ## [Unreleased] - 2026-09-28
 
+### Added - Module 9: Aggregated Compliance Status Dashboard
+- Implemented `DashboardService` in `src/services/dashboard_service.py` with `get_system_overview` (cross-framework totals, compliance percentage, open gaps, evidence stats), `get_all_frameworks_summary` (per-framework compliance scorecard), `get_framework_detail` (requirement-level breakdown with per-requirement gap counts), `get_gap_summary` (counts by status/type/priority), and `get_evidence_summary` (counts by validity/processing status).
+- Built Pydantic schemas in `src/schemas/dashboard.py` (`SystemOverview`, `FrameworkSummaryItem`, `RequirementStatusItem`, `FrameworkDetailResponse`, `GapSummary`, `EvidenceSummary`).
+- Created 5 REST API endpoints in `src/api/v1/dashboard.py`: `GET /dashboard/overview`, `GET /dashboard/frameworks`, `GET /dashboard/frameworks/{id}`, `GET /dashboard/gaps`, `GET /dashboard/evidence`.
+- All dashboard endpoints require auditor role (read-only).
+- Added 13 unit tests in `tests/unit/test_dashboard_service.py` covering system overview (empty/populated/gaps/evidence), all-frameworks summary, framework detail (requirements/not-found/gaps), gap summary, and evidence summary.
+- Added 12 API integration tests in `tests/api/test_dashboard.py` covering all 5 endpoints with auth enforcement.
+
 ### Added - Module 8: Full JWT Authentication & RBAC
 - Implemented `AuthService` in `src/services/auth_service.py` with `authenticate_user` (constant-time rejection for nonexistent users), `create_user` (duplicate detection, password length validation), `get_user`, `list_users` (paginated, active filter), `update_user` (role/email/active with duplicate email check), and `change_password` (current password verification).
 - Built Pydantic schemas in `src/schemas/auth.py` (`LoginRequest`, `LoginResponse`, `UserCreateRequest`, `UserResponse`, `UserUpdateRequest`, `ChangePasswordRequest`, `PaginatedUsersResponse`).

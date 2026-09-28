@@ -24,6 +24,14 @@ from src.schemas.framework import (
     RequirementResponse,
     RequirementUpdate,
 )
+from src.schemas.dashboard import (
+    EvidenceSummary,
+    FrameworkDetailResponse,
+    FrameworkSummaryItem,
+    GapSummary,
+    RequirementStatusItem,
+    SystemOverview,
+)
 from src.schemas.compliance import (
     ComplianceHistoryItem,
     ComplianceStatusResponse,
@@ -76,4 +84,10 @@ __all__ = [
     "UserUpdateRequest",
     "ChangePasswordRequest",
     "PaginatedUsersResponse",
+    "SystemOverview",
+    "FrameworkSummaryItem",
+    "FrameworkDetailResponse",
+    "RequirementStatusItem",
+    "GapSummary",
+    "EvidenceSummary",
 ]

@@ -42,3 +42,8 @@ All requests and responses use JSON (except multipart file uploads) and strictly
 - `GET /api/v1/gap-reports`: Paginated list of gap reports with `?status=`, `?requirement_id=`, `?gap_type=`, `?priority=`, `?page=`, `?page_size=` filters. Ordered by priority desc, detected_at desc. Requires auditor role. **Implemented (Module 7).**
 - `GET /api/v1/gap-reports/{id}`: Retrieve full gap report details by UUID. Requires auditor role. **Implemented (Module 7).**
 - `PATCH /api/v1/gap-reports/{id}`: Update gap report status with validated state machine transitions. Accepts `status` and optional `resolution_notes`. Requires compliance-officer role. **Implemented (Module 7).**
+- `GET /api/v1/dashboard/overview`: System-wide compliance overview — total frameworks, requirements, status counts, compliance percentage, open gaps, evidence statistics. Requires auditor role. **Implemented (Module 9).**
+- `GET /api/v1/dashboard/frameworks`: All active frameworks with compliance summary per framework. Requires auditor role. **Implemented (Module 9).**
+- `GET /api/v1/dashboard/frameworks/{id}`: Detailed framework view with per-requirement compliance breakdown, severity, status reason, last evaluation time, and open gap counts. Requires auditor role. **Implemented (Module 9).**
+- `GET /api/v1/dashboard/gaps`: Gap report statistics aggregated by status, type, and priority. Requires auditor role. **Implemented (Module 9).**
+- `GET /api/v1/dashboard/evidence`: Evidence document statistics by validity status and processing status. Requires auditor role. **Implemented (Module 9).**
