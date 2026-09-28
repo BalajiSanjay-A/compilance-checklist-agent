@@ -15,10 +15,14 @@ All requests and responses use JSON (except multipart file uploads) and strictly
 - `GET /health` & `GET /api/v1/health`: System health and connectivity.
 - `POST /api/v1/auth/login`: Authenticate and receive JWT token.
 - `GET /api/v1/auth/me`: Inspect current user and active role.
-- `GET /api/v1/frameworks`: List all active compliance frameworks.
-- `POST /api/v1/frameworks`: Register or seed a framework.
-- `GET /api/v1/frameworks/{id}/requirements`: List requirements for a framework.
-- `POST /api/v1/frameworks/{id}/requirements`: Add a requirement to a framework.
+- `GET /api/v1/frameworks`: List compliance frameworks (optional `?is_active=` filter). **Implemented (Module 2).**
+- `POST /api/v1/frameworks`: Register a new framework. Returns 201. **Implemented (Module 2).**
+- `GET /api/v1/frameworks/{id}`: Get single framework with requirement count. **Implemented (Module 2).**
+- `PATCH /api/v1/frameworks/{id}`: Partial update framework metadata. **Implemented (Module 2).**
+- `GET /api/v1/frameworks/{id}/requirements`: Paginated requirements with `?is_active=`, `?severity=`, `?page=`, `?page_size=` filters. **Implemented (Module 2).**
+- `POST /api/v1/frameworks/{id}/requirements`: Add requirement to framework; auto-creates baseline GAP status. Returns 201. **Implemented (Module 2).**
+- `GET /api/v1/requirements/{id}`: Get single requirement by UUID. **Implemented (Module 2).**
+- `PATCH /api/v1/requirements/{id}`: Partial update requirement. **Implemented (Module 2).**
 - `POST /api/v1/evidence/upload`: Upload evidence document (multipart).
 - `GET /api/v1/evidence/{id}`: Inspect evidence metadata and processing status.
 - `GET /api/v1/compliance/{framework_id}/status`: Aggregated compliance status scorecard.

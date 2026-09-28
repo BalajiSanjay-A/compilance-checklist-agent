@@ -19,20 +19,29 @@
   - [x] Seed frameworks (`seed/frameworks/soc2_type2.json`, `seed/frameworks/iso27001_2022.json`).
   - [x] Idempotent database seeder (`src/database/seed.py`).
   - [x] Integration tests (`tests/integration/test_db_models.py`, `tests/integration/test_seed.py`, `tests/integration/test_migrations.py`).
+- [x] **Module 2: Framework & Requirement Management APIs**
+  - [x] Pydantic request/response schemas (`src/schemas/framework.py`).
+  - [x] `FrameworkService` with CRUD for frameworks and requirements (`src/services/framework_service.py`).
+  - [x] REST API endpoints (8 total): list/create/get/update frameworks, list/create requirements under framework, get/update individual requirements.
+  - [x] Router wired into `api_v1_router` (`src/api/v1/router.py`).
+  - [x] Exception handler fixed: `EntityNotFoundException` → 404, `DuplicateEntityException` → 409.
+  - [x] Role-based auth: `ComplianceOfficerDep` for writes, `AuditorDep` for reads.
+  - [x] Auto-initialization of baseline GAP `ComplianceStatusRecord` on requirement creation.
+  - [x] API integration tests (`tests/api/test_frameworks.py`, 28 tests).
+  - [x] Service unit tests (`tests/unit/test_framework_service.py`, 19 tests).
 
-## Next (Module 2)
-- [ ] Pydantic request and response schemas for frameworks and requirements.
-- [ ] `FrameworkService` for business logic, filtering, and CRUD operations.
+## Next (Module 3)
+- [ ] Pydantic schemas for evidence upload and retrieval.
+- [ ] `EvidenceService` for file validation, secure storage, SHA-256 hashing, text extraction.
 - [ ] REST API endpoints:
-  - `GET /api/v1/frameworks`
-  - `POST /api/v1/frameworks`
-  - `GET /api/v1/frameworks/{id}/requirements`
-  - `POST /api/v1/frameworks/{id}/requirements`
-- [ ] Role-based authorization enforcement (`compliance-officer` for writes, `auditor` for reads).
-- [ ] API integration tests for status codes 200, 201, 400, 401, 403, 404, 422.
+  - `POST /api/v1/evidence/upload`
+  - `GET /api/v1/evidence/{id}`
+  - `GET /api/v1/evidence`
+- [ ] Security: MIME type validation, size limits, filename sanitization, 0600 permissions.
+- [ ] Text extraction from PDF (pypdf), TXT, MD files.
+- [ ] API and service unit tests.
 
-## Later (Modules 3 - 10)
-- [ ] Secure evidence ingestion and text extraction (Module 3).
+## Later (Modules 4 - 10)
 - [ ] Durable database-backed job queue and background worker (Module 4).
 - [ ] AI Grok matching agent with anti-injection prompts (Module 5).
 - [ ] Deterministic compliance evaluation and expiration engine (Module 6).

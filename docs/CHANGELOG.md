@@ -3,7 +3,20 @@
 All notable engineering changes to this project will be documented in this file.
 This changelog serves as the persistent engineering memory layer alongside git commits.
 
-## [Unreleased] - 2026-09-27
+## [Unreleased] - 2026-09-28
+
+### Added - Module 2: Framework & Requirement Management APIs
+- Built Pydantic request/response schemas for frameworks and requirements in `src/schemas/framework.py` with proper validation constraints and `from_attributes` config.
+- Implemented `FrameworkService` in `src/services/framework_service.py` with static methods for full CRUD on frameworks and requirements, including paginated requirement listing, duplicate detection, and automatic baseline GAP status initialization.
+- Created 8 REST API endpoints in `src/api/v1/frameworks.py`: `GET/POST /frameworks`, `GET/PATCH /frameworks/{id}`, `GET/POST /frameworks/{id}/requirements`, `GET/PATCH /requirements/{id}`.
+- Wired frameworks router into `api_v1_router` in `src/api/v1/router.py`.
+- Fixed global exception handler in `src/main.py` to map `EntityNotFoundException` → HTTP 404, `DuplicateEntityException` → HTTP 409, `ValidationException` → HTTP 422 (previously all mapped to 400).
+- Enforced role-based access: `ComplianceOfficerDep` for write operations, `AuditorDep` for reads.
+- Added `async_client_db` test fixture in `tests/conftest.py` providing transaction-isolated API testing with nested savepoints.
+- Added 28 API integration tests in `tests/api/test_frameworks.py` covering all endpoints, auth enforcement (401/403), not-found (404), duplicates (409), validation (422), pagination, and severity filtering.
+- Added 19 service unit tests in `tests/unit/test_framework_service.py` covering all CRUD operations, error paths, pagination, filtering, and GAP status auto-creation.
+
+## [Previous] - 2026-09-27
 
 ### Added - Module 1: Database Foundation & Schemas
 - Implemented SQLAlchemy 2.0 DeclarativeBase, `UUIDPrimaryKeyMixin`, and `TimestampMixin` with timezone awareness in `src/database/base.py`.

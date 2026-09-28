@@ -4,9 +4,9 @@
 The **Compliance Checklist Automation Agent** is a production-oriented, AI-assisted regulatory compliance platform designed to track recurring checklist items across frameworks (e.g., SOC 2 Type II, ISO/IEC 27001:2022). It handles evidence document ingestion, secure text extraction, asynchronous evidence matching against compliance requirements using Grok (xAI API), deterministic compliance state calculation, evidence expiration management, and actionable gap reporting.
 
 ## 2. Current Architecture & Implementation State
-- **Current Milestone**: Module 1 - Database Foundation (Completed)
+- **Current Milestone**: Module 2 - Framework & Requirement Management APIs (Completed)
 - **Active Branch**: `temporary` (all development occurs here; merges to `main` at module completion gates)
-- **Status**: Database models, SQLAlchemy 2.0 DeclarativeBase, Alembic migrations (`0001_initial_schema`), PostgreSQL-first schema, SQLite compatibility, seed frameworks (SOC 2 Type II and ISO/IEC 27001:2022), and default user seeding completed and verified. Ready for Module 2.
+- **Status**: Full CRUD API for frameworks and requirements implemented with Pydantic schemas, service layer, role-based auth, proper HTTP status codes, and comprehensive tests (47 new tests). Ready for Module 3.
 
 ## 3. Technology Stack
 - **Language & Runtime**: Python 3.12+
@@ -47,12 +47,15 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - `src/core/logging.py`: Structured JSON logging with credential and secret scrubbing.
 - `src/core/security.py`: Auth boundaries, role definitions, and dependency guards.
 - `src/main.py`: FastAPI application entrypoint.
+- `src/schemas/framework.py`: Pydantic schemas for frameworks and requirements.
+- `src/services/framework_service.py`: Business logic for framework/requirement CRUD.
+- `src/api/v1/frameworks.py`: REST API endpoints for frameworks and requirements.
 - `docs/`: Canonical engineering context documents.
 
 ## 6. Milestone Progress
 - [x] **Module 0**: Project Foundation, Settings, Logging, Auth Boundaries, Context System, Test Harness *(Completed)*
 - [x] **Module 1**: Database Foundation & Schemas, Alembic Migrations, Seed Data *(Completed)*
-- [ ] **Module 2**: Framework & Requirement Management APIs
+- [x] **Module 2**: Framework & Requirement Management APIs *(Completed)*
 - [ ] **Module 3**: Evidence Ingestion & Secure Storage
 - [ ] **Module 4**: Durable DB-Backed Job Queue
 - [ ] **Module 5**: AI Grok Matching Agent

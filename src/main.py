@@ -9,7 +9,12 @@ from fastapi.responses import JSONResponse
 
 from src.api.v1.router import api_v1_router
 from src.config import get_settings
-from src.core.exceptions import ComplianceException
+from src.core.exceptions import (
+    ComplianceException,
+    DuplicateEntityException,
+    EntityNotFoundException,
+    ValidationException,
+)
 from src.core.logging import configure_logging, get_logger
 
 logger = get_logger("app.main")
@@ -57,12 +62,19 @@ def create_application() -> FastAPI:
     # Mount v1 router
     app.include_router(api_v1_router, prefix="/api")
 
-    # Global domain exception handler
+    # Domain exception → HTTP status mapping
+    _exception_status_map: dict[type, int] = {
+        EntityNotFoundException: status.HTTP_404_NOT_FOUND,
+        DuplicateEntityException: status.HTTP_409_CONFLICT,
+        ValidationException: 422,
+    }
+
     @app.exception_handler(ComplianceException)
     async def compliance_exception_handler(request: Request, exc: ComplianceException) -> JSONResponse:
-        logger.error("Domain exception: %s | details: %s", exc.message, exc.details)
+        http_status = _exception_status_map.get(type(exc), status.HTTP_400_BAD_REQUEST)
+        logger.error("Domain exception [%d]: %s | details: %s", http_status, exc.message, exc.details)
         return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=http_status,
             content={"error": exc.__class__.__name__, "message": exc.message, "details": exc.details},
         )
 

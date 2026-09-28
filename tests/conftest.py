@@ -11,6 +11,7 @@ from sqlalchemy.pool import StaticPool
 from src.config import Settings, get_settings
 from src.core.security import Role, create_access_token
 from src.database.base import Base
+from src.database.session import get_db
 import src.database.models  # noqa: F401
 from src.main import create_application
 
@@ -98,3 +99,34 @@ def auditor_token() -> str:
         "role": Role.AUDITOR.value,
         "user_id": "22222222-2222-2222-2222-222222222222",
     })
+
+
+@pytest.fixture
+async def async_client_db(db_engine: Engine) -> AsyncGenerator[tuple[AsyncClient, Session], None]:
+    """Async HTTP client with database dependency override using nested transaction isolation."""
+    app = create_application()
+    connection = db_engine.connect()
+    transaction = connection.begin()
+    session = Session(bind=connection, expire_on_commit=False)
+
+    nested = connection.begin_nested()
+
+    @event.listens_for(session, "after_transaction_end")
+    def restart_savepoint(sess, trans):
+        nonlocal nested
+        if not connection.closed and trans.nested and not connection.in_nested_transaction():
+            nested = connection.begin_nested()
+
+    def override_get_db():
+        yield session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        yield client, session
+
+    session.close()
+    transaction.rollback()
+    connection.close()
+    app.dependency_overrides.clear()
