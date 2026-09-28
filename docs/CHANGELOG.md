@@ -5,6 +5,29 @@ This changelog serves as the persistent engineering memory layer alongside git c
 
 ## [Unreleased] - 2026-09-28
 
+### Added - Module 7: Gap Reporting Lifecycle
+- Implemented `GapService` in `src/services/gap_service.py` with `get_gap_report`, `list_gap_reports` (filterable by status, requirement, gap type, priority; paginated), and `update_gap_status` with validated state machine transitions.
+- Gap status transitions: `OPEN` → {`IN_REVIEW`, `WAIVED`}, `IN_REVIEW` → {`RESOLVED`, `OPEN`, `WAIVED`}, `WAIVED` → {`OPEN`}, `RESOLVED` → terminal (no transitions).
+- Built Pydantic schemas in `src/schemas/gap_report.py` (`GapReportResponse`, `GapReportListItem`, `PaginatedGapReportsResponse`, `GapStatusUpdateRequest`).
+- Created 3 REST API endpoints in `src/api/v1/gap_reports.py`: `GET /gap-reports` (paginated with filters), `GET /gap-reports/{id}`, `PATCH /gap-reports/{id}` (status transition).
+- Role-based auth: `AuditorDep` for reads, `ComplianceOfficerDep` for status updates.
+- Added 17 unit tests in `tests/unit/test_gap_service.py` covering get/not-found, list with all filter combinations, pagination, all valid transitions, terminal state enforcement, and invalid transitions.
+- Added 15 API integration tests in `tests/api/test_gap_reports.py` covering list/filter/pagination/auth, get/not-found/auth, and PATCH transitions including invalid/auth enforcement.
+
+### Added - Module 6: Compliance Evaluation Engine
+- Implemented `ComplianceEvaluationService` in `src/services/compliance_service.py` with deterministic compliance evaluation pipeline.
+- Citation verification: normalized-whitespace exact substring matching (case-insensitive) against raw evidence text. Requires at least 1 verified quote and 0 failures.
+- Evidence validity computation: `VALID` / `EXPIRING_SOON` (within 30 days) / `EXPIRED` based on `expires_at` date.
+- Deterministic status resolution: expired → GAP, LLM gap → GAP, LLM partial → PARTIAL, failed citations → PARTIAL, missing evidence → PARTIAL, all clear → SATISFIED.
+- Full evaluation pipeline (`evaluate_match`): loads entities, verifies citations, checks validity, resolves status, updates `ComplianceStatusRecord`, logs `ComplianceStatusHistory`, auto-generates `GapReport` for non-satisfied results.
+- Gap report auto-generation with type classification: `MISSING_EVIDENCE`, `AMBIGUOUS_EVIDENCE`, `PARTIAL_COVERAGE`.
+- Expiration refresh scan (`refresh_expiration_status`): batch updates validity status for all evidence with expiration dates.
+- Framework compliance summary: aggregated counts and compliance percentage per framework.
+- Built Pydantic schemas in `src/schemas/compliance.py` (`ComplianceStatusResponse`, `ComplianceHistoryItem`, `PaginatedHistoryResponse`, `FrameworkComplianceSummary`, `EvaluateAndResolveRequest`).
+- Created 5 REST API endpoints in `src/api/v1/compliance.py`: `POST /compliance/evaluate-and-resolve` (full pipeline), `GET /compliance/{framework_id}/status` (scorecard), `GET /compliance/requirements/{id}/status`, `GET /compliance/requirements/{id}/history` (paginated), `POST /compliance/refresh-expiration`.
+- Added 34 unit tests in `tests/unit/test_compliance_service.py` covering whitespace normalization, citation verification, validity computation, status resolution, full pipeline, refresh expiration, and framework summary.
+- Added 16 API integration tests in `tests/api/test_compliance.py` covering evaluate-and-resolve (success/history/auth/not-found/expired), framework status, requirement status/history, and refresh expiration.
+
 ### Added - Module 5: AI Evidence Matching Agent
 - Implemented `BaseLLMService` abstract interface, `GrokLLMService` (production xAI/OpenAI-compatible), and `MockLLMService` (deterministic keyword-based) in `src/ai/matching_service.py`.
 - Implemented `EvidenceMatchingAgent` with `match_evidence_to_requirement()` that evaluates evidence against requirements using the LLM and persists `EvidenceMatch` records.

@@ -67,9 +67,23 @@
   - [x] `AIProviderException` → HTTP 502 mapping.
   - [x] Unit tests (24) and API integration tests (15).
 
-## Next (Module 6)
-- [ ] Deterministic compliance evaluation and expiration engine.
-- [ ] Gap reporting lifecycle (Module 7).
+- [x] **Module 6: Compliance Evaluation Engine & Expiration**
+  - [x] `ComplianceEvaluationService` with citation verification, validity computation, deterministic status resolution.
+  - [x] Full evaluation pipeline: AI match → citation verify → expiration check → status resolve → history log → gap report.
+  - [x] Expiration refresh scan for batch validity updates.
+  - [x] Framework compliance summary with aggregated counts and percentage.
+  - [x] Pydantic schemas for compliance status, history, and framework summary.
+  - [x] REST endpoints: `POST /compliance/evaluate-and-resolve`, `GET /compliance/{framework_id}/status`, `GET /compliance/requirements/{id}/status`, `GET /compliance/requirements/{id}/history`, `POST /compliance/refresh-expiration`.
+  - [x] Unit tests (34) and API integration tests (16).
+
+- [x] **Module 7: Gap Reporting Lifecycle**
+  - [x] `GapService` with gap report CRUD and validated status transitions.
+  - [x] Status state machine: OPEN → {IN_REVIEW, WAIVED}, IN_REVIEW → {RESOLVED, OPEN, WAIVED}, WAIVED → {OPEN}, RESOLVED → terminal.
+  - [x] Pydantic schemas for gap reports and status updates.
+  - [x] REST endpoints: `GET /gap-reports`, `GET /gap-reports/{id}`, `PATCH /gap-reports/{id}`.
+  - [x] Unit tests (17) and API integration tests (15).
+
+## Next (Module 8)
 - [ ] Full JWT auth and RBAC implementation (Module 8).
 - [ ] Aggregated compliance dashboard API (Module 9).
 - [ ] Hardening, security testing, and end-to-end demo (Module 10).

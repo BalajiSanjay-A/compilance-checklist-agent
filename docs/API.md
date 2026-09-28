@@ -29,7 +29,11 @@ All requests and responses use JSON (except multipart file uploads) and strictly
 - `POST /api/v1/compliance/evaluate`: Trigger AI evidence matching against a requirement. Accepts `evidence_id` and `requirement_id`. Returns structured match result with status, confidence, reasoning, and citations. Requires compliance-officer role. Returns 201. **Implemented (Module 5).**
 - `GET /api/v1/compliance/matches/{id}`: Retrieve full details of an evidence match evaluation by UUID. **Implemented (Module 5).**
 - `GET /api/v1/compliance/requirements/{id}/matches`: Paginated list of all evidence match evaluations for a requirement with `?page=`, `?page_size=` parameters. **Implemented (Module 5).**
-- `GET /api/v1/compliance/{framework_id}/status`: Aggregated compliance status scorecard.
-- `GET /api/v1/compliance/requirements/{id}/history`: Full audit trail for a requirement.
-- `GET /api/v1/gap-reports`: List open, in-review, or resolved gap reports.
-- `PATCH /api/v1/gap-reports/{id}`: Resolve or waive a gap report.
+- `POST /api/v1/compliance/evaluate-and-resolve`: Full pipeline: AI evidence matching + deterministic compliance evaluation. Accepts `evidence_id` and `requirement_id`. Returns updated compliance status with match reference, history, and auto-generated gap report if non-satisfied. Requires compliance-officer role. Returns 201. **Implemented (Module 6).**
+- `GET /api/v1/compliance/{framework_id}/status`: Aggregated compliance status scorecard with counts (satisfied/partial/gap/not_evaluated) and compliance percentage. Requires auditor role. **Implemented (Module 6).**
+- `GET /api/v1/compliance/requirements/{id}/status`: Current compliance status for a specific requirement. Requires auditor role. **Implemented (Module 6).**
+- `GET /api/v1/compliance/requirements/{id}/history`: Paginated audit trail of compliance status transitions for a requirement with `?page=`, `?page_size=` parameters. Requires auditor role. **Implemented (Module 6).**
+- `POST /api/v1/compliance/refresh-expiration`: Scan all evidence and update validity statuses based on current date. Returns count of updated records. Requires compliance-officer role. **Implemented (Module 6).**
+- `GET /api/v1/gap-reports`: Paginated list of gap reports with `?status=`, `?requirement_id=`, `?gap_type=`, `?priority=`, `?page=`, `?page_size=` filters. Ordered by priority desc, detected_at desc. Requires auditor role. **Implemented (Module 7).**
+- `GET /api/v1/gap-reports/{id}`: Retrieve full gap report details by UUID. Requires auditor role. **Implemented (Module 7).**
+- `PATCH /api/v1/gap-reports/{id}`: Update gap report status with validated state machine transitions. Accepts `status` and optional `resolution_notes`. Requires compliance-officer role. **Implemented (Module 7).**

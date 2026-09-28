@@ -4,9 +4,9 @@
 The **Compliance Checklist Automation Agent** is a production-oriented, AI-assisted regulatory compliance platform designed to track recurring checklist items across frameworks (e.g., SOC 2 Type II, ISO/IEC 27001:2022). It handles evidence document ingestion, secure text extraction, asynchronous evidence matching against compliance requirements using Grok (xAI API), deterministic compliance state calculation, evidence expiration management, and actionable gap reporting.
 
 ## 2. Current Architecture & Implementation State
-- **Current Milestone**: Module 5 - AI Evidence Matching Agent (Completed)
+- **Current Milestone**: Module 7 - Gap Reporting Lifecycle (Completed)
 - **Active Branch**: `temporary` (all development occurs here; merges to `main` at module completion gates)
-- **Status**: AI matching agent with LLM abstraction, MockLLMService for testing, GrokLLMService for production, structured Pydantic output, anti-prompt-injection boundaries, and REST API endpoints. 192 total tests passing. Ready for Module 6.
+- **Status**: Deterministic compliance evaluation engine with citation verification, expiration management, status resolution, audit history, and gap reporting lifecycle with status transitions. 274 total tests passing. Ready for Module 8.
 
 ## 3. Technology Stack
 - **Language & Runtime**: Python 3.12+
@@ -60,6 +60,12 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - `src/ai/schemas.py`: Pydantic structured output schema for LLM evidence evaluation.
 - `src/schemas/matching.py`: API request/response schemas for evidence matching.
 - `src/api/v1/matching.py`: REST API endpoints for compliance evaluation and match retrieval.
+- `src/services/compliance_service.py`: Deterministic compliance evaluation engine with citation verification, expiration checks, and status resolution.
+- `src/schemas/compliance.py`: Pydantic schemas for compliance status, history, and framework summary.
+- `src/api/v1/compliance.py`: REST API endpoints for compliance evaluation, status, history, and expiration refresh.
+- `src/services/gap_service.py`: Gap report CRUD and status transition lifecycle.
+- `src/schemas/gap_report.py`: Pydantic schemas for gap reports and status updates.
+- `src/api/v1/gap_reports.py`: REST API endpoints for gap report listing, retrieval, and status transitions.
 - `docs/`: Canonical engineering context documents.
 
 ## 6. Milestone Progress
@@ -69,8 +75,8 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - [x] **Module 3**: Evidence Ingestion & Secure Storage *(Completed)*
 - [x] **Module 4**: Durable DB-Backed Job Queue & Background Worker *(Completed)*
 - [x] **Module 5**: AI Evidence Matching Agent *(Completed)*
-- [ ] **Module 6**: Compliance Evaluation Engine & Expiration
-- [ ] **Module 7**: Gap Reporting Lifecycle
+- [x] **Module 6**: Compliance Evaluation Engine & Expiration *(Completed)*
+- [x] **Module 7**: Gap Reporting Lifecycle *(Completed)*
 - [ ] **Module 8**: Full JWT Auth & RBAC
 - [ ] **Module 9**: Aggregated Compliance Status Dashboard
 - [ ] **Module 10**: Hardening, E2E Verification & Demo

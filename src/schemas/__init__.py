@@ -22,6 +22,12 @@ from src.schemas.compliance import (
     FrameworkComplianceSummary,
     PaginatedHistoryResponse,
 )
+from src.schemas.gap_report import (
+    GapReportListItem,
+    GapReportResponse,
+    GapStatusUpdateRequest,
+    PaginatedGapReportsResponse,
+)
 from src.schemas.matching import (
     EvaluateEvidenceRequest,
     EvidenceMatchListItem,
@@ -50,4 +56,8 @@ __all__ = [
     "PaginatedHistoryResponse",
     "FrameworkComplianceSummary",
     "EvaluateAndResolveRequest",
+    "GapReportResponse",
+    "GapReportListItem",
+    "PaginatedGapReportsResponse",
+    "GapStatusUpdateRequest",
 ]
