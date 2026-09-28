@@ -5,6 +5,20 @@ This changelog serves as the persistent engineering memory layer alongside git c
 
 ## [Unreleased] - 2026-09-28
 
+### Added - Module 5: AI Evidence Matching Agent
+- Implemented `BaseLLMService` abstract interface, `GrokLLMService` (production xAI/OpenAI-compatible), and `MockLLMService` (deterministic keyword-based) in `src/ai/matching_service.py`.
+- Implemented `EvidenceMatchingAgent` with `match_evidence_to_requirement()` that evaluates evidence against requirements using the LLM and persists `EvidenceMatch` records.
+- Built structured Pydantic output schema `EvidenceMatchResult` in `src/ai/schemas.py` with status, confidence, reasoning, supporting/missing/requested evidence, and expiration risk.
+- Implemented anti-prompt-injection boundaries in `src/ai/prompts.py` using `<UNTRUSTED_EVIDENCE_PAYLOAD>` tags with strict security instructions.
+- Created `get_llm_service()` factory: returns `MockLLMService` when `ai_mock_mode=True`, `GrokLLMService` otherwise.
+- Built API request/response schemas in `src/schemas/matching.py` (`EvaluateEvidenceRequest`, `EvidenceMatchResponse`, `EvidenceMatchListItem`, `PaginatedMatchesResponse`).
+- Created 3 REST API endpoints in `src/api/v1/matching.py`: `POST /compliance/evaluate` (trigger evaluation), `GET /compliance/matches/{id}` (get match details), `GET /compliance/requirements/{id}/matches` (paginated match history).
+- Wired matching router into `api_v1_router`.
+- Added `AIProviderException` → HTTP 502 mapping in exception handler.
+- Role-based auth: `ComplianceOfficerDep` for evaluate, `AuditorDep` for reads.
+- Added 24 unit tests in `tests/unit/test_matching_service.py` covering MockLLMService (satisfied/partial/gap/empty), schema validation, factory, agent CRUD, error handling, persistence, and prompt injection boundary.
+- Added 15 API integration tests in `tests/api/test_matching.py` covering evaluate, auth enforcement (401/403), not-found (404), no-content (502), invalid input (422), match retrieval, and pagination.
+
 ### Added - Module 4: Durable DB-Backed Job Queue & Background Worker
 - Implemented `JobQueueService` in `src/services/job_queue_service.py` with enqueue (idempotent), claim (lease-based locking with `SELECT FOR UPDATE SKIP LOCKED` for PostgreSQL, fallback for SQLite), complete, fail (exponential backoff retry), get, and queue stats methods.
 - Implemented `DocumentWorker` in `src/workers/document_worker.py` with configurable poll-process loop, signal handling (SIGTERM/SIGINT), extensible job handler registry, and text extraction handler.

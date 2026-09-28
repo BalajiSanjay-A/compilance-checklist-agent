@@ -26,8 +26,10 @@ All requests and responses use JSON (except multipart file uploads) and strictly
 - `POST /api/v1/evidence/upload`: Multipart file upload with `document_type`, `valid_from`, `expires_at` form fields. MIME allowlist: PDF, TXT, MD, CSV. Max 25MB. SHA-256 hashing. Returns 201. **Implemented (Module 3).**
 - `GET /api/v1/evidence/{id}`: Full evidence metadata including content text and processing status. **Implemented (Module 3).**
 - `GET /api/v1/evidence`: Paginated evidence list with `?document_type=`, `?validity_status=`, `?processing_status=`, `?page=`, `?page_size=` filters. **Implemented (Module 3).**
+- `POST /api/v1/compliance/evaluate`: Trigger AI evidence matching against a requirement. Accepts `evidence_id` and `requirement_id`. Returns structured match result with status, confidence, reasoning, and citations. Requires compliance-officer role. Returns 201. **Implemented (Module 5).**
+- `GET /api/v1/compliance/matches/{id}`: Retrieve full details of an evidence match evaluation by UUID. **Implemented (Module 5).**
+- `GET /api/v1/compliance/requirements/{id}/matches`: Paginated list of all evidence match evaluations for a requirement with `?page=`, `?page_size=` parameters. **Implemented (Module 5).**
 - `GET /api/v1/compliance/{framework_id}/status`: Aggregated compliance status scorecard.
-- `POST /api/v1/compliance/evaluate`: Trigger evidence matching against a requirement.
 - `GET /api/v1/compliance/requirements/{id}/history`: Full audit trail for a requirement.
 - `GET /api/v1/gap-reports`: List open, in-review, or resolved gap reports.
 - `PATCH /api/v1/gap-reports/{id}`: Resolve or waive a gap report.

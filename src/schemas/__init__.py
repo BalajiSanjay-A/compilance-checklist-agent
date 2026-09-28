@@ -15,6 +15,12 @@ from src.schemas.framework import (
     RequirementResponse,
     RequirementUpdate,
 )
+from src.schemas.matching import (
+    EvaluateEvidenceRequest,
+    EvidenceMatchListItem,
+    EvidenceMatchResponse,
+    PaginatedMatchesResponse,
+)
 
 __all__ = [
     "FrameworkCreate",
@@ -28,4 +34,8 @@ __all__ = [
     "EvidenceResponse",
     "EvidenceListItem",
     "PaginatedEvidenceResponse",
+    "EvaluateEvidenceRequest",
+    "EvidenceMatchResponse",
+    "EvidenceMatchListItem",
+    "PaginatedMatchesResponse",
 ]

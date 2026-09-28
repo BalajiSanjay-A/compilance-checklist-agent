@@ -55,17 +55,20 @@
   - [x] Service unit tests (`tests/unit/test_job_queue_service.py`, 20 tests).
   - [x] Worker unit tests (`tests/unit/test_document_worker.py`, 6 tests).
 
-## Next (Module 5)
-- [ ] AI evidence matching agent with LangChain.
-- [ ] `match_evidence_to_requirement` tool.
-- [ ] Structured Pydantic output (status, reasoning, citations, confidence).
-- [ ] Anti-prompt-injection with `<UNTRUSTED_EVIDENCE_PAYLOAD>` boundary.
-- [ ] Mock LLM for deterministic tests.
-- [ ] Ambiguous evidence → PARTIAL/GAP with requested evidence.
+- [x] **Module 5: AI Evidence Matching Agent**
+  - [x] `BaseLLMService` abstract interface with `GrokLLMService` and `MockLLMService` implementations.
+  - [x] `EvidenceMatchingAgent.match_evidence_to_requirement()` with LLM evaluation and match persistence.
+  - [x] Structured Pydantic output (`EvidenceMatchResult`: status, reasoning, citations, confidence, expiration_risk).
+  - [x] Anti-prompt-injection with `<UNTRUSTED_EVIDENCE_PAYLOAD>` boundary in prompt templates.
+  - [x] `MockLLMService` for deterministic keyword-based test evaluations.
+  - [x] `get_llm_service()` factory with `ai_mock_mode` toggle.
+  - [x] API schemas (`EvaluateEvidenceRequest`, `EvidenceMatchResponse`, `PaginatedMatchesResponse`).
+  - [x] REST endpoints: `POST /compliance/evaluate`, `GET /compliance/matches/{id}`, `GET /compliance/requirements/{id}/matches`.
+  - [x] `AIProviderException` → HTTP 502 mapping.
+  - [x] Unit tests (24) and API integration tests (15).
 
-## Later (Modules 6 - 10)
-- [ ] AI Grok matching agent with anti-injection prompts (Module 5).
-- [ ] Deterministic compliance evaluation and expiration engine (Module 6).
+## Next (Module 6)
+- [ ] Deterministic compliance evaluation and expiration engine.
 - [ ] Gap reporting lifecycle (Module 7).
 - [ ] Full JWT auth and RBAC implementation (Module 8).
 - [ ] Aggregated compliance dashboard API (Module 9).

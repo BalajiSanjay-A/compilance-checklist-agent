@@ -4,9 +4,9 @@
 The **Compliance Checklist Automation Agent** is a production-oriented, AI-assisted regulatory compliance platform designed to track recurring checklist items across frameworks (e.g., SOC 2 Type II, ISO/IEC 27001:2022). It handles evidence document ingestion, secure text extraction, asynchronous evidence matching against compliance requirements using Grok (xAI API), deterministic compliance state calculation, evidence expiration management, and actionable gap reporting.
 
 ## 2. Current Architecture & Implementation State
-- **Current Milestone**: Module 4 - Durable DB-Backed Job Queue (Completed)
+- **Current Milestone**: Module 5 - AI Evidence Matching Agent (Completed)
 - **Active Branch**: `temporary` (all development occurs here; merges to `main` at module completion gates)
-- **Status**: Durable job queue with lease-based locking, exponential backoff retry, and background document worker. 153 total tests passing. Ready for Module 5.
+- **Status**: AI matching agent with LLM abstraction, MockLLMService for testing, GrokLLMService for production, structured Pydantic output, anti-prompt-injection boundaries, and REST API endpoints. 192 total tests passing. Ready for Module 6.
 
 ## 3. Technology Stack
 - **Language & Runtime**: Python 3.12+
@@ -55,6 +55,11 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - `src/api/v1/evidence.py`: REST API endpoints for evidence management.
 - `src/services/job_queue_service.py`: Durable job queue with lease-based locking and retry.
 - `src/workers/document_worker.py`: Background worker for document processing jobs.
+- `src/ai/matching_service.py`: LLM abstraction (BaseLLMService), GrokLLMService, MockLLMService, EvidenceMatchingAgent.
+- `src/ai/prompts.py`: Anti-injection prompt templates with `<UNTRUSTED_EVIDENCE_PAYLOAD>` boundary.
+- `src/ai/schemas.py`: Pydantic structured output schema for LLM evidence evaluation.
+- `src/schemas/matching.py`: API request/response schemas for evidence matching.
+- `src/api/v1/matching.py`: REST API endpoints for compliance evaluation and match retrieval.
 - `docs/`: Canonical engineering context documents.
 
 ## 6. Milestone Progress
@@ -63,7 +68,7 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - [x] **Module 2**: Framework & Requirement Management APIs *(Completed)*
 - [x] **Module 3**: Evidence Ingestion & Secure Storage *(Completed)*
 - [x] **Module 4**: Durable DB-Backed Job Queue & Background Worker *(Completed)*
-- [ ] **Module 5**: AI Grok Matching Agent
+- [x] **Module 5**: AI Evidence Matching Agent *(Completed)*
 - [ ] **Module 6**: Compliance Evaluation Engine & Expiration
 - [ ] **Module 7**: Gap Reporting Lifecycle
 - [ ] **Module 8**: Full JWT Auth & RBAC
