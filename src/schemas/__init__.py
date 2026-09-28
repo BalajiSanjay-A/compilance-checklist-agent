@@ -1,5 +1,14 @@
 """Pydantic schemas package."""
 
+from src.schemas.auth import (
+    ChangePasswordRequest,
+    LoginRequest,
+    LoginResponse,
+    PaginatedUsersResponse,
+    UserCreateRequest,
+    UserResponse,
+    UserUpdateRequest,
+)
 from src.schemas.evidence import (
     EvidenceListItem,
     EvidenceResponse,
@@ -60,4 +69,11 @@ __all__ = [
     "GapReportListItem",
     "PaginatedGapReportsResponse",
     "GapStatusUpdateRequest",
+    "LoginRequest",
+    "LoginResponse",
+    "UserCreateRequest",
+    "UserResponse",
+    "UserUpdateRequest",
+    "ChangePasswordRequest",
+    "PaginatedUsersResponse",
 ]

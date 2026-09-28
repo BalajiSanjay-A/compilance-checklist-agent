@@ -5,6 +5,23 @@ This changelog serves as the persistent engineering memory layer alongside git c
 
 ## [Unreleased] - 2026-09-28
 
+### Added - Module 8: Full JWT Authentication & RBAC
+- Implemented `AuthService` in `src/services/auth_service.py` with `authenticate_user` (constant-time rejection for nonexistent users), `create_user` (duplicate detection, password length validation), `get_user`, `list_users` (paginated, active filter), `update_user` (role/email/active with duplicate email check), and `change_password` (current password verification).
+- Built Pydantic schemas in `src/schemas/auth.py` (`LoginRequest`, `LoginResponse`, `UserCreateRequest`, `UserResponse`, `UserUpdateRequest`, `ChangePasswordRequest`, `PaginatedUsersResponse`).
+- Created 8 REST API endpoints in `src/api/v1/auth.py`:
+  - `POST /auth/login`: Public login returning JWT with user_id, role, and configurable expiry.
+  - `GET /auth/me`: Returns authenticated user identity (from JWT or dev headers, no DB required).
+  - `PATCH /auth/me/password`: Authenticated user changes own password (verifies current password first).
+  - `POST /auth/users`: Admin creates new user (201).
+  - `GET /auth/users`: Admin lists users with pagination and active filter.
+  - `GET /auth/users/{id}`: Admin retrieves user by UUID.
+  - `PATCH /auth/users/{id}`: Admin updates user role, email, or active status.
+- Wired auth router into `api_v1_router`, moved `/auth/me` from router.py to dedicated auth module.
+- Added `AuthenticationException` → HTTP 401 mapping in global exception handler.
+- Preserved existing X-Dev-Role/X-Dev-User header bypass for test/dev mode — all 274 existing tests unaffected.
+- Added 24 unit tests in `tests/unit/test_auth_service.py` covering authentication (valid/wrong/nonexistent/deactivated), user creation (success/duplicate username/duplicate email/short password), get/list/update/change-password with all error paths.
+- Added 25 API integration tests in `tests/api/test_auth.py` covering login flow (success/wrong password/nonexistent/deactivated/JWT round-trip), me (dev headers/auth required), password change (success/wrong current/auth), user CRUD (create/duplicate/admin required/auth required), list (filter/admin required), get (found/not found/admin required), update (role/deactivate/not found/admin/auth).
+
 ### Added - Module 7: Gap Reporting Lifecycle
 - Implemented `GapService` in `src/services/gap_service.py` with `get_gap_report`, `list_gap_reports` (filterable by status, requirement, gap type, priority; paginated), and `update_gap_status` with validated state machine transitions.
 - Gap status transitions: `OPEN` → {`IN_REVIEW`, `WAIVED`}, `IN_REVIEW` → {`RESOLVED`, `OPEN`, `WAIVED`}, `WAIVED` → {`OPEN`}, `RESOLVED` → terminal (no transitions).

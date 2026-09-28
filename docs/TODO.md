@@ -83,7 +83,16 @@
   - [x] REST endpoints: `GET /gap-reports`, `GET /gap-reports/{id}`, `PATCH /gap-reports/{id}`.
   - [x] Unit tests (17) and API integration tests (15).
 
-## Next (Module 8)
-- [ ] Full JWT auth and RBAC implementation (Module 8).
+- [x] **Module 8: Full JWT Authentication & RBAC**
+  - [x] `AuthService` with authenticate, create, get, list, update, change_password.
+  - [x] Login endpoint: `POST /auth/login` → JWT with user_id, role, expiry.
+  - [x] User profile: `GET /auth/me` (from token/dev headers, no DB dependency).
+  - [x] Password change: `PATCH /auth/me/password` (verifies current password).
+  - [x] Admin user CRUD: `POST /auth/users`, `GET /auth/users`, `GET /auth/users/{id}`, `PATCH /auth/users/{id}`.
+  - [x] `AuthenticationException` → HTTP 401 in global exception handler.
+  - [x] Dev header bypass preserved for test/dev mode.
+  - [x] Unit tests (24) and API integration tests (25).
+
+## Next (Module 9)
 - [ ] Aggregated compliance dashboard API (Module 9).
 - [ ] Hardening, security testing, and end-to-end demo (Module 10).

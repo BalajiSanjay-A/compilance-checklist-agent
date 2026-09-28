@@ -11,6 +11,7 @@ from src.api.v1.router import api_v1_router
 from src.config import get_settings
 from src.core.exceptions import (
     AIProviderException,
+    AuthenticationException,
     ComplianceException,
     DuplicateEntityException,
     EntityNotFoundException,
@@ -65,6 +66,7 @@ def create_application() -> FastAPI:
 
     # Domain exception → HTTP status mapping
     _exception_status_map: dict[type, int] = {
+        AuthenticationException: status.HTTP_401_UNAUTHORIZED,
         EntityNotFoundException: status.HTTP_404_NOT_FOUND,
         DuplicateEntityException: status.HTTP_409_CONFLICT,
         ValidationException: 422,

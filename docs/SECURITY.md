@@ -5,6 +5,7 @@
 - **Path Traversal & Malicious Files**: Files are validated by MIME type and size ceiling (25 MB max). Basenames are sanitized using `pathlib.Path(name).name` with strict character set filtering. Files are saved in isolated storage with non-executable permissions (`0600`).
 - **Data Tampering**: SHA-256 integrity hashing on upload.
 - **Improper Authorization**: Early authentication boundaries; role-based access control (`compliance-officer`, `admin`, `auditor`) enforced via FastAPI dependency injection.
+- **Credential Stuffing**: Constant-time rejection for nonexistent users (dummy bcrypt hash is verified to prevent timing side channels).
 - **Secret Leakage**: Automatic scrubbing filter in application logger masks API keys, passwords, and sensitive tokens.
 
 ## 2. Evidence Upload Security (Module 3)
@@ -21,3 +22,12 @@
 - Separately models evidence validity (`VALID`, `EXPIRING_SOON`, `EXPIRED`) from compliance status (`SATISFIED`, `PARTIAL`, `GAP`).
 - Configurable warning window: `EXPIRATION_WARNING_DAYS=30`.
 - Deterministic expiration engine prevents stale evidence from satisfying compliance controls.
+
+## 4. Authentication & JWT Flow (Module 8)
+- **Login**: `POST /auth/login` accepts username/password, verifies credentials against bcrypt-hashed passwords in the database, and returns a signed HS256 JWT.
+- **Token payload**: `sub` (username), `role`, `user_id`, `exp` (configurable expiry, default 60 minutes).
+- **Stateless verification**: `get_current_user` dependency decodes and validates the JWT on each request. No per-request database lookup (standard stateless JWT pattern).
+- **Dev/test bypass**: In `development` or `test` mode, `X-Dev-Role` and `X-Dev-User` headers are accepted for fast integration testing without token issuance.
+- **RBAC enforcement**: `require_role()` dependency factory checks the user's role from the token against allowed roles. Three roles: `compliance-officer` (writes), `auditor` (reads), `admin` (user management).
+- **Password security**: bcrypt hashing with auto-generated salt, input truncated to 72 bytes (bcrypt limit). Minimum 8-character password policy enforced at creation and change.
+- **Constant-time rejection**: Authentication of nonexistent users still performs a dummy bcrypt verification to prevent timing-based username enumeration.

@@ -13,8 +13,13 @@ All requests and responses use JSON (except multipart file uploads) and strictly
 
 ## 3. Core Endpoint Catalog
 - `GET /health` & `GET /api/v1/health`: System health and connectivity.
-- `POST /api/v1/auth/login`: Authenticate and receive JWT token.
-- `GET /api/v1/auth/me`: Inspect current user and active role.
+- `POST /api/v1/auth/login`: Authenticate with username and password, receive JWT access token with user_id, role, and configurable expiry. Public (no auth required). **Implemented (Module 8).**
+- `GET /api/v1/auth/me`: Returns authenticated user's identity from JWT or dev headers. **Implemented (Module 8).**
+- `PATCH /api/v1/auth/me/password`: Change authenticated user's own password. Requires current password verification. **Implemented (Module 8).**
+- `POST /api/v1/auth/users`: Create a new user account. Requires admin role. Returns 201. **Implemented (Module 8).**
+- `GET /api/v1/auth/users`: Paginated list of users with `?is_active=`, `?page=`, `?page_size=` filters. Requires admin role. **Implemented (Module 8).**
+- `GET /api/v1/auth/users/{id}`: Get user by UUID. Requires admin role. **Implemented (Module 8).**
+- `PATCH /api/v1/auth/users/{id}`: Update user role, email, or active status. Requires admin role. **Implemented (Module 8).**
 - `GET /api/v1/frameworks`: List compliance frameworks (optional `?is_active=` filter). **Implemented (Module 2).**
 - `POST /api/v1/frameworks`: Register a new framework. Returns 201. **Implemented (Module 2).**
 - `GET /api/v1/frameworks/{id}`: Get single framework with requirement count. **Implemented (Module 2).**

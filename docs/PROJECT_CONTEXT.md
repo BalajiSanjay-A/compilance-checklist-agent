@@ -4,9 +4,9 @@
 The **Compliance Checklist Automation Agent** is a production-oriented, AI-assisted regulatory compliance platform designed to track recurring checklist items across frameworks (e.g., SOC 2 Type II, ISO/IEC 27001:2022). It handles evidence document ingestion, secure text extraction, asynchronous evidence matching against compliance requirements using Grok (xAI API), deterministic compliance state calculation, evidence expiration management, and actionable gap reporting.
 
 ## 2. Current Architecture & Implementation State
-- **Current Milestone**: Module 7 - Gap Reporting Lifecycle (Completed)
+- **Current Milestone**: Module 8 - Full JWT Authentication & RBAC (Completed)
 - **Active Branch**: `temporary` (all development occurs here; merges to `main` at module completion gates)
-- **Status**: Deterministic compliance evaluation engine with citation verification, expiration management, status resolution, audit history, and gap reporting lifecycle with status transitions. 274 total tests passing. Ready for Module 8.
+- **Status**: Full JWT authentication with login endpoint, user management CRUD (admin), password change, and comprehensive RBAC enforcement. Dev header bypass preserved for test/dev mode. 323 total tests passing. Ready for Module 9.
 
 ## 3. Technology Stack
 - **Language & Runtime**: Python 3.12+
@@ -66,6 +66,9 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - `src/services/gap_service.py`: Gap report CRUD and status transition lifecycle.
 - `src/schemas/gap_report.py`: Pydantic schemas for gap reports and status updates.
 - `src/api/v1/gap_reports.py`: REST API endpoints for gap report listing, retrieval, and status transitions.
+- `src/services/auth_service.py`: User authentication, creation, management, and password operations.
+- `src/schemas/auth.py`: Pydantic schemas for login, user CRUD, and password change.
+- `src/api/v1/auth.py`: REST API endpoints for login, user profile, password change, and user management.
 - `docs/`: Canonical engineering context documents.
 
 ## 6. Milestone Progress
@@ -77,6 +80,6 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - [x] **Module 5**: AI Evidence Matching Agent *(Completed)*
 - [x] **Module 6**: Compliance Evaluation Engine & Expiration *(Completed)*
 - [x] **Module 7**: Gap Reporting Lifecycle *(Completed)*
-- [ ] **Module 8**: Full JWT Auth & RBAC
+- [x] **Module 8**: Full JWT Auth & RBAC *(Completed)*
 - [ ] **Module 9**: Aggregated Compliance Status Dashboard
 - [ ] **Module 10**: Hardening, E2E Verification & Demo
