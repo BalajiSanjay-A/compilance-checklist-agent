@@ -32,6 +32,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Storage directory: %s", settings.storage_dir.resolve())
     logger.info("AI Mock Mode: %s (Application LLM: %s)", settings.ai_mock_mode, settings.xai_model)
 
+    if settings.secret_key.startswith("insecure-dev-secret"):
+        if settings.app_env == "production":
+            raise RuntimeError(
+                "FATAL: default secret_key detected in production. "
+                "Set the SECRET_KEY environment variable to a strong random value."
+            )
+        logger.warning("Using default insecure secret key – set SECRET_KEY before deploying.")
+
     # Ensure storage directory exists
     settings.storage_dir.mkdir(parents=True, exist_ok=True)
 
@@ -52,11 +60,20 @@ def create_application() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # CORS configuration
+    # CORS configuration – restrict origins in production
+    if settings.app_env == "production":
+        cors_origins: list[str] = [
+            o.strip()
+            for o in settings.cors_allowed_origins.split(",")
+            if o.strip()
+        ] if settings.cors_allowed_origins else []
+    else:
+        cors_origins = ["*"]
+
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
+        allow_origins=cors_origins,
+        allow_credentials=bool(cors_origins) and cors_origins != ["*"],
         allow_methods=["*"],
         allow_headers=["*"],
     )

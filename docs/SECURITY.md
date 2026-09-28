@@ -31,3 +31,14 @@
 - **RBAC enforcement**: `require_role()` dependency factory checks the user's role from the token against allowed roles. Three roles: `compliance-officer` (writes), `auditor` (reads), `admin` (user management).
 - **Password security**: bcrypt hashing with auto-generated salt, input truncated to 72 bytes (bcrypt limit). Minimum 8-character password policy enforced at creation and change.
 - **Constant-time rejection**: Authentication of nonexistent users still performs a dummy bcrypt verification to prevent timing-based username enumeration.
+
+## 5. CORS Policy (Module 10 Hardening)
+- **Production**: Origins restricted to `CORS_ALLOWED_ORIGINS` environment variable (comma-separated). Credentials only allowed when explicit origins are configured.
+- **Dev/test**: Wildcard `*` origins with `allow_credentials=False` — browsers will not send cookies or auth headers cross-origin in dev mode.
+- **Rationale**: The combination of `allow_origins=["*"]` + `allow_credentials=True` is explicitly forbidden by the CORS specification and was corrected in Module 10.
+
+## 6. E2E Security Verification (Module 10)
+- End-to-end test confirms unauthenticated requests are rejected (401) across all protected endpoint categories.
+- RBAC enforcement verified: auditor cannot trigger evaluations (403), only officer/admin can write.
+- Expired evidence always resolves to GAP regardless of LLM output — deterministic override verified in E2E test.
+- No secrets tracked in git (verified: `.env`, `*.db`, `storage/` all excluded by `.gitignore`).

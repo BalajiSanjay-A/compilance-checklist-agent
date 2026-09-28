@@ -97,6 +97,10 @@ class Settings(BaseSettings):
         default="change_this_password_immediately",
         description="Initial seeded compliance officer password.",
     )
+    cors_allowed_origins: str = Field(
+        default="",
+        description="Comma-separated allowed CORS origins for production.",
+    )
 
     # Background worker settings
     worker_poll_interval_seconds: int = Field(

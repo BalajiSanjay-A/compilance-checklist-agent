@@ -5,6 +5,16 @@ This changelog serves as the persistent engineering memory layer alongside git c
 
 ## [Unreleased] - 2026-09-28
 
+### Added - Module 10: Hardening, E2E Verification & Demo
+- **Security hardening**: Fixed CORS middleware to disable `allow_credentials` when `allow_origins=["*"]` (prevents browser credential leakage in dev mode). Verified existing security controls: file upload size enforcement, MIME allowlist, filename sanitization, secret key production guard, dev header gating by `app_env`, RBAC on all endpoints.
+- **E2E integration tests** in `tests/e2e/test_compliance_workflow.py`:
+  - `test_full_compliance_workflow`: 18-step end-to-end test covering admin user creation → JWT login (officer + auditor) → framework creation → requirement with baseline GAP → evidence upload with text extraction → RBAC enforcement (auditor cannot write) → full evaluation pipeline → compliance status verification → history audit trail → evidence matches → gap report lifecycle (list/transition) → framework scorecard → dashboard overview/frameworks/detail/gaps/evidence → auth leak verification (unauthenticated requests blocked).
+  - `test_expired_evidence_forces_gap`: Verifies expired evidence always resolves to GAP regardless of LLM output.
+  - `test_admin_user_management_lifecycle`: Admin creates/lists/updates/deactivates users; deactivated user cannot login.
+- **Demo readiness**: Updated `README.md` with quick start guide, setup instructions, configuration table, role descriptions, and architecture overview.
+- **Documentation updates**: Updated `PROJECT_CONTEXT.md`, `TODO.md`, `CHANGELOG.md`, `SECURITY.md`, `API.md` for Module 10 completion.
+- **Regression verification**: 351 tests passing (348 existing + 3 E2E), 0 failures, 0 regressions.
+
 ### Added - Module 9: Aggregated Compliance Status Dashboard
 - Implemented `DashboardService` in `src/services/dashboard_service.py` with `get_system_overview` (cross-framework totals, compliance percentage, open gaps, evidence stats), `get_all_frameworks_summary` (per-framework compliance scorecard), `get_framework_detail` (requirement-level breakdown with per-requirement gap counts), `get_gap_summary` (counts by status/type/priority), and `get_evidence_summary` (counts by validity/processing status).
 - Built Pydantic schemas in `src/schemas/dashboard.py` (`SystemOverview`, `FrameworkSummaryItem`, `RequirementStatusItem`, `FrameworkDetailResponse`, `GapSummary`, `EvidenceSummary`).

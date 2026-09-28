@@ -100,5 +100,16 @@
   - [x] All endpoints require auditor role.
   - [x] Unit tests (13) and API integration tests (12).
 
-## Next (Module 10)
-- [ ] Hardening, security testing, and end-to-end demo (Module 10).
+- [x] **Module 10: Hardening, E2E Verification & Demo**
+  - [x] Security hardening: CORS credentials fix (no credentials with wildcard origins).
+  - [x] Security audit: verified file upload size enforcement, filename sanitization, MIME validation, secret key production guard, dev header gating, RBAC on all endpoints.
+  - [x] E2E integration test covering full workflow: admin user creation → JWT login → framework → requirements → evidence upload → RBAC enforcement → AI evaluation → compliance status → history → matches → gap reports → gap transitions → framework scorecard → dashboard overview/detail/gaps/evidence → auth leak verification.
+  - [x] E2E test for expired evidence forced GAP resolution.
+  - [x] E2E test for admin user management lifecycle (create/list/update/deactivate/login rejection).
+  - [x] Regression verification: 351 tests passing, 0 failures.
+  - [x] Demo readiness: README.md with quick start guide, configuration, architecture overview.
+  - [x] Documentation updates: PROJECT_CONTEXT.md, TODO.md, CHANGELOG.md, SECURITY.md, API.md.
+  - [x] Final verification: no secrets in git, clean working tree.
+
+## All Modules Complete
+All 11 modules (0–10) are implemented, tested, and documented.
