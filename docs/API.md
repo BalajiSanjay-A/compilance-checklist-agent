@@ -23,8 +23,9 @@ All requests and responses use JSON (except multipart file uploads) and strictly
 - `POST /api/v1/frameworks/{id}/requirements`: Add requirement to framework; auto-creates baseline GAP status. Returns 201. **Implemented (Module 2).**
 - `GET /api/v1/requirements/{id}`: Get single requirement by UUID. **Implemented (Module 2).**
 - `PATCH /api/v1/requirements/{id}`: Partial update requirement. **Implemented (Module 2).**
-- `POST /api/v1/evidence/upload`: Upload evidence document (multipart).
-- `GET /api/v1/evidence/{id}`: Inspect evidence metadata and processing status.
+- `POST /api/v1/evidence/upload`: Multipart file upload with `document_type`, `valid_from`, `expires_at` form fields. MIME allowlist: PDF, TXT, MD, CSV. Max 25MB. SHA-256 hashing. Returns 201. **Implemented (Module 3).**
+- `GET /api/v1/evidence/{id}`: Full evidence metadata including content text and processing status. **Implemented (Module 3).**
+- `GET /api/v1/evidence`: Paginated evidence list with `?document_type=`, `?validity_status=`, `?processing_status=`, `?page=`, `?page_size=` filters. **Implemented (Module 3).**
 - `GET /api/v1/compliance/{framework_id}/status`: Aggregated compliance status scorecard.
 - `POST /api/v1/compliance/evaluate`: Trigger evidence matching against a requirement.
 - `GET /api/v1/compliance/requirements/{id}/history`: Full audit trail for a requirement.

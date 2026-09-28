@@ -3,10 +3,12 @@
 from fastapi import APIRouter
 
 from src.api.dependencies import CurrentUserDep, SettingsDep
+from src.api.v1.evidence import router as evidence_router
 from src.api.v1.frameworks import router as frameworks_router
 
 api_v1_router = APIRouter(prefix="/v1")
 api_v1_router.include_router(frameworks_router)
+api_v1_router.include_router(evidence_router)
 
 
 @api_v1_router.get("/health", tags=["Health"])

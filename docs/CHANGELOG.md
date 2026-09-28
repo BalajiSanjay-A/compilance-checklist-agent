@@ -5,6 +5,15 @@ This changelog serves as the persistent engineering memory layer alongside git c
 
 ## [Unreleased] - 2026-09-28
 
+### Added - Module 3: Evidence Ingestion & Secure Storage
+- Built Pydantic schemas for evidence upload/retrieval in `src/schemas/evidence.py` (`EvidenceUploadResponse`, `EvidenceResponse`, `EvidenceListItem`, `PaginatedEvidenceResponse`).
+- Implemented `EvidenceService` in `src/services/evidence_service.py` with secure upload pipeline: filename sanitization, MIME allowlist validation, SHA-256 hashing, hash-based sharded file storage with `0600` permissions, text extraction from PDF/TXT/MD/CSV, evidence validity computation, and automatic job creation for deferred extraction.
+- Created 3 REST API endpoints in `src/api/v1/evidence.py`: `POST /evidence/upload` (multipart), `GET /evidence/{id}`, `GET /evidence` (paginated with filters).
+- Wired evidence router into `api_v1_router`.
+- Seeded deterministic dev user in `async_client_db` test fixture for FK integrity with `uploaded_by`.
+- Added 13 API integration tests in `tests/api/test_evidence.py` covering upload, retrieval, listing, pagination, auth enforcement, validity dates, and MIME rejection.
+- Added 34 service unit tests in `tests/unit/test_evidence_service.py` covering sanitization, validation, hashing, storage, text extraction, validity computation, and integration with database session.
+
 ### Added - Module 2: Framework & Requirement Management APIs
 - Built Pydantic request/response schemas for frameworks and requirements in `src/schemas/framework.py` with proper validation constraints and `from_attributes` config.
 - Implemented `FrameworkService` in `src/services/framework_service.py` with static methods for full CRUD on frameworks and requirements, including paginated requirement listing, duplicate detection, and automatic baseline GAP status initialization.

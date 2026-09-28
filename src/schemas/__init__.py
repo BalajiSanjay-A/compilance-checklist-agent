@@ -1,5 +1,11 @@
 """Pydantic schemas package."""
 
+from src.schemas.evidence import (
+    EvidenceListItem,
+    EvidenceResponse,
+    EvidenceUploadResponse,
+    PaginatedEvidenceResponse,
+)
 from src.schemas.framework import (
     FrameworkCreate,
     FrameworkResponse,
@@ -18,4 +24,8 @@ __all__ = [
     "RequirementUpdate",
     "RequirementResponse",
     "PaginatedRequirementsResponse",
+    "EvidenceUploadResponse",
+    "EvidenceResponse",
+    "EvidenceListItem",
+    "PaginatedEvidenceResponse",
 ]

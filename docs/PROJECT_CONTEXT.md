@@ -4,9 +4,9 @@
 The **Compliance Checklist Automation Agent** is a production-oriented, AI-assisted regulatory compliance platform designed to track recurring checklist items across frameworks (e.g., SOC 2 Type II, ISO/IEC 27001:2022). It handles evidence document ingestion, secure text extraction, asynchronous evidence matching against compliance requirements using Grok (xAI API), deterministic compliance state calculation, evidence expiration management, and actionable gap reporting.
 
 ## 2. Current Architecture & Implementation State
-- **Current Milestone**: Module 2 - Framework & Requirement Management APIs (Completed)
+- **Current Milestone**: Module 3 - Evidence Ingestion & Secure Storage (Completed)
 - **Active Branch**: `temporary` (all development occurs here; merges to `main` at module completion gates)
-- **Status**: Full CRUD API for frameworks and requirements implemented with Pydantic schemas, service layer, role-based auth, proper HTTP status codes, and comprehensive tests (47 new tests). Ready for Module 3.
+- **Status**: Secure evidence upload pipeline implemented with SHA-256 hashing, MIME validation, text extraction, hash-based sharded storage, and evidence validity computation. 127 total tests passing. Ready for Module 4.
 
 ## 3. Technology Stack
 - **Language & Runtime**: Python 3.12+
@@ -50,13 +50,16 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - `src/schemas/framework.py`: Pydantic schemas for frameworks and requirements.
 - `src/services/framework_service.py`: Business logic for framework/requirement CRUD.
 - `src/api/v1/frameworks.py`: REST API endpoints for frameworks and requirements.
+- `src/schemas/evidence.py`: Pydantic schemas for evidence upload/retrieval.
+- `src/services/evidence_service.py`: Evidence upload, storage, hashing, text extraction.
+- `src/api/v1/evidence.py`: REST API endpoints for evidence management.
 - `docs/`: Canonical engineering context documents.
 
 ## 6. Milestone Progress
 - [x] **Module 0**: Project Foundation, Settings, Logging, Auth Boundaries, Context System, Test Harness *(Completed)*
 - [x] **Module 1**: Database Foundation & Schemas, Alembic Migrations, Seed Data *(Completed)*
 - [x] **Module 2**: Framework & Requirement Management APIs *(Completed)*
-- [ ] **Module 3**: Evidence Ingestion & Secure Storage
+- [x] **Module 3**: Evidence Ingestion & Secure Storage *(Completed)*
 - [ ] **Module 4**: Durable DB-Backed Job Queue
 - [ ] **Module 5**: AI Grok Matching Agent
 - [ ] **Module 6**: Compliance Evaluation Engine & Expiration

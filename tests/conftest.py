@@ -1,5 +1,6 @@
 """Pytest configuration and shared test fixtures."""
 
+from pathlib import Path
 from typing import AsyncGenerator, Generator
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -8,12 +9,17 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from uuid import UUID
+
 from src.config import Settings, get_settings
-from src.core.security import Role, create_access_token
+from src.core.security import Role, create_access_token, get_password_hash
 from src.database.base import Base
+from src.database.models import User
 from src.database.session import get_db
-import src.database.models  # noqa: F401
+import src.database.models as _models  # noqa: F401
 from src.main import create_application
+
+DEV_USER_ID = UUID("00000000-0000-0000-0000-000000000001")
 
 
 @pytest.fixture(scope="session")
@@ -102,7 +108,7 @@ def auditor_token() -> str:
 
 
 @pytest.fixture
-async def async_client_db(db_engine: Engine) -> AsyncGenerator[tuple[AsyncClient, Session], None]:
+async def async_client_db(db_engine: Engine, tmp_path: Path) -> AsyncGenerator[tuple[AsyncClient, Session], None]:
     """Async HTTP client with database dependency override using nested transaction isolation."""
     app = create_application()
     connection = db_engine.connect()
@@ -117,10 +123,36 @@ async def async_client_db(db_engine: Engine) -> AsyncGenerator[tuple[AsyncClient
         if not connection.closed and trans.nested and not connection.in_nested_transaction():
             nested = connection.begin_nested()
 
+    dev_user = User(
+        id=DEV_USER_ID,
+        username="dev-officer",
+        email="dev@test.local",
+        hashed_password=get_password_hash("test"),
+        role=Role.COMPLIANCE_OFFICER,
+    )
+    session.add(dev_user)
+    session.flush()
+
+    test_settings = Settings(
+        app_env="test",
+        debug=True,
+        use_sqlite_fallback=True,
+        sqlite_db_path=":memory:",
+        ai_mock_mode=True,
+        expiration_warning_days=30,
+        secret_key="test-secret-key-for-unit-and-integration-tests",
+        storage_dir=tmp_path / "evidence",
+    )
+    (tmp_path / "evidence").mkdir(exist_ok=True)
+
     def override_get_db():
         yield session
 
+    def override_get_settings():
+        return test_settings
+
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_settings] = override_get_settings
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:

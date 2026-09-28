@@ -30,19 +30,26 @@
   - [x] API integration tests (`tests/api/test_frameworks.py`, 28 tests).
   - [x] Service unit tests (`tests/unit/test_framework_service.py`, 19 tests).
 
-## Next (Module 3)
-- [ ] Pydantic schemas for evidence upload and retrieval.
-- [ ] `EvidenceService` for file validation, secure storage, SHA-256 hashing, text extraction.
-- [ ] REST API endpoints:
-  - `POST /api/v1/evidence/upload`
-  - `GET /api/v1/evidence/{id}`
-  - `GET /api/v1/evidence`
-- [ ] Security: MIME type validation, size limits, filename sanitization, 0600 permissions.
-- [ ] Text extraction from PDF (pypdf), TXT, MD files.
-- [ ] API and service unit tests.
+- [x] **Module 3: Evidence Ingestion & Secure Storage**
+  - [x] Pydantic schemas for evidence upload/retrieval (`src/schemas/evidence.py`).
+  - [x] `EvidenceService` with secure upload, SHA-256 hashing, text extraction, validation (`src/services/evidence_service.py`).
+  - [x] REST API endpoints: `POST /evidence/upload`, `GET /evidence/{id}`, `GET /evidence`.
+  - [x] Security: MIME allowlist, 25MB size limit, filename sanitization, hash-based sharded storage, `0600` permissions.
+  - [x] Text extraction from PDF (pypdf), TXT, MD, CSV files.
+  - [x] Evidence validity computation (VALID/EXPIRING_SOON/EXPIRED) from dates.
+  - [x] Automatic `DocumentProcessingJob` creation for unsupported extraction types.
+  - [x] Dev user seeded in test fixture for FK integrity.
+  - [x] API integration tests (`tests/api/test_evidence.py`, 13 tests).
+  - [x] Service unit tests (`tests/unit/test_evidence_service.py`, 34 tests).
 
-## Later (Modules 4 - 10)
-- [ ] Durable database-backed job queue and background worker (Module 4).
+## Next (Module 4)
+- [ ] Durable database-backed job queue worker.
+- [ ] Job claiming with lease-based locking.
+- [ ] Retry handling with exponential backoff.
+- [ ] Worker recovery and idempotent processing.
+- [ ] Job state transitions: QUEUED → PROCESSING → COMPLETED/FAILED.
+
+## Later (Modules 5 - 10)
 - [ ] AI Grok matching agent with anti-injection prompts (Module 5).
 - [ ] Deterministic compliance evaluation and expiration engine (Module 6).
 - [ ] Gap reporting lifecycle (Module 7).
