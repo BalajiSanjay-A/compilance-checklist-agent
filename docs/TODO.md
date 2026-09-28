@@ -42,14 +42,28 @@
   - [x] API integration tests (`tests/api/test_evidence.py`, 13 tests).
   - [x] Service unit tests (`tests/unit/test_evidence_service.py`, 34 tests).
 
-## Next (Module 4)
-- [ ] Durable database-backed job queue worker.
-- [ ] Job claiming with lease-based locking.
-- [ ] Retry handling with exponential backoff.
-- [ ] Worker recovery and idempotent processing.
-- [ ] Job state transitions: QUEUED → PROCESSING → COMPLETED/FAILED.
+- [x] **Module 4: Durable DB-Backed Job Queue & Background Worker**
+  - [x] `JobQueueService` with enqueue, claim, complete, fail, retry (`src/services/job_queue_service.py`).
+  - [x] Lease-based locking with `locked_at`/`locked_by` and stale lease reclamation.
+  - [x] Exponential backoff on retry (60s → 120s → 240s..., capped at 3600s).
+  - [x] Idempotent enqueue (prevents duplicate active jobs per evidence+type).
+  - [x] `DocumentWorker` background worker with poll-process loop (`src/workers/document_worker.py`).
+  - [x] `handle_extract_text` job handler using EvidenceService text extraction.
+  - [x] Extensible job handler registry (`JOB_HANDLERS` dict).
+  - [x] Queue stats reporting.
+  - [x] Evidence processing status updates on job completion/failure.
+  - [x] Service unit tests (`tests/unit/test_job_queue_service.py`, 20 tests).
+  - [x] Worker unit tests (`tests/unit/test_document_worker.py`, 6 tests).
 
-## Later (Modules 5 - 10)
+## Next (Module 5)
+- [ ] AI evidence matching agent with LangChain.
+- [ ] `match_evidence_to_requirement` tool.
+- [ ] Structured Pydantic output (status, reasoning, citations, confidence).
+- [ ] Anti-prompt-injection with `<UNTRUSTED_EVIDENCE_PAYLOAD>` boundary.
+- [ ] Mock LLM for deterministic tests.
+- [ ] Ambiguous evidence → PARTIAL/GAP with requested evidence.
+
+## Later (Modules 6 - 10)
 - [ ] AI Grok matching agent with anti-injection prompts (Module 5).
 - [ ] Deterministic compliance evaluation and expiration engine (Module 6).
 - [ ] Gap reporting lifecycle (Module 7).

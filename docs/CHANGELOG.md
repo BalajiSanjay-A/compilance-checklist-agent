@@ -5,6 +5,13 @@ This changelog serves as the persistent engineering memory layer alongside git c
 
 ## [Unreleased] - 2026-09-28
 
+### Added - Module 4: Durable DB-Backed Job Queue & Background Worker
+- Implemented `JobQueueService` in `src/services/job_queue_service.py` with enqueue (idempotent), claim (lease-based locking with `SELECT FOR UPDATE SKIP LOCKED` for PostgreSQL, fallback for SQLite), complete, fail (exponential backoff retry), get, and queue stats methods.
+- Implemented `DocumentWorker` in `src/workers/document_worker.py` with configurable poll-process loop, signal handling (SIGTERM/SIGINT), extensible job handler registry, and text extraction handler.
+- Worker reclaims stale leases from crashed workers based on `worker_lease_timeout_seconds`.
+- Exponential backoff: `60 * 2^(attempt-1)` seconds, capped at 3600s.
+- Added 20 service unit tests and 6 worker unit tests covering enqueue, claim, retry, failure, backoff, stale lease recovery, and text extraction processing.
+
 ### Added - Module 3: Evidence Ingestion & Secure Storage
 - Built Pydantic schemas for evidence upload/retrieval in `src/schemas/evidence.py` (`EvidenceUploadResponse`, `EvidenceResponse`, `EvidenceListItem`, `PaginatedEvidenceResponse`).
 - Implemented `EvidenceService` in `src/services/evidence_service.py` with secure upload pipeline: filename sanitization, MIME allowlist validation, SHA-256 hashing, hash-based sharded file storage with `0600` permissions, text extraction from PDF/TXT/MD/CSV, evidence validity computation, and automatic job creation for deferred extraction.

@@ -4,9 +4,9 @@
 The **Compliance Checklist Automation Agent** is a production-oriented, AI-assisted regulatory compliance platform designed to track recurring checklist items across frameworks (e.g., SOC 2 Type II, ISO/IEC 27001:2022). It handles evidence document ingestion, secure text extraction, asynchronous evidence matching against compliance requirements using Grok (xAI API), deterministic compliance state calculation, evidence expiration management, and actionable gap reporting.
 
 ## 2. Current Architecture & Implementation State
-- **Current Milestone**: Module 3 - Evidence Ingestion & Secure Storage (Completed)
+- **Current Milestone**: Module 4 - Durable DB-Backed Job Queue (Completed)
 - **Active Branch**: `temporary` (all development occurs here; merges to `main` at module completion gates)
-- **Status**: Secure evidence upload pipeline implemented with SHA-256 hashing, MIME validation, text extraction, hash-based sharded storage, and evidence validity computation. 127 total tests passing. Ready for Module 4.
+- **Status**: Durable job queue with lease-based locking, exponential backoff retry, and background document worker. 153 total tests passing. Ready for Module 5.
 
 ## 3. Technology Stack
 - **Language & Runtime**: Python 3.12+
@@ -53,6 +53,8 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - `src/schemas/evidence.py`: Pydantic schemas for evidence upload/retrieval.
 - `src/services/evidence_service.py`: Evidence upload, storage, hashing, text extraction.
 - `src/api/v1/evidence.py`: REST API endpoints for evidence management.
+- `src/services/job_queue_service.py`: Durable job queue with lease-based locking and retry.
+- `src/workers/document_worker.py`: Background worker for document processing jobs.
 - `docs/`: Canonical engineering context documents.
 
 ## 6. Milestone Progress
@@ -60,7 +62,7 @@ The **Compliance Checklist Automation Agent** is a production-oriented, AI-assis
 - [x] **Module 1**: Database Foundation & Schemas, Alembic Migrations, Seed Data *(Completed)*
 - [x] **Module 2**: Framework & Requirement Management APIs *(Completed)*
 - [x] **Module 3**: Evidence Ingestion & Secure Storage *(Completed)*
-- [ ] **Module 4**: Durable DB-Backed Job Queue
+- [x] **Module 4**: Durable DB-Backed Job Queue & Background Worker *(Completed)*
 - [ ] **Module 5**: AI Grok Matching Agent
 - [ ] **Module 6**: Compliance Evaluation Engine & Expiration
 - [ ] **Module 7**: Gap Reporting Lifecycle
